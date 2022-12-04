@@ -1,0 +1,11 @@
+version: '3'
+
+services:
+  terraform:
+    container_name: terraform
+    image: hashicorp/terraform:latest
+    env_file:
+      - .env
+    working_dir: /workspaces
+    volumes:
+      - ./:/workspaces
