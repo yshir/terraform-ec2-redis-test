@@ -4,11 +4,11 @@ plan:
 
 .PHONY: apply
 apply:
-	./bin/terraform.sh apply
+	./bin/terraform.sh apply -auto-approve
 
 .PHONY: destroy
 destroy:
-	./bin/terraform.sh destroy
+	./bin/terraform.sh destroy -auto-approve
 
 .PHONY: show
 show:

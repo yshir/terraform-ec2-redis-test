@@ -40,3 +40,11 @@ module "ec2" {
   vpc_id            = module.network.vpc_id
   public_subnet_ids = module.network.public_subnet_ids
 }
+
+module "elasticache" {
+  source             = "./elasticache"
+  prefix             = local.prefix
+  vpc_id             = module.network.vpc_id
+  private_subnet_ids = module.network.private_subnet_ids
+  node_count         = 1
+}

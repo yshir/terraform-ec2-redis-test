@@ -1,23 +1,23 @@
-resource "aws_instance" "app_server" {
+resource "aws_instance" "app" {
   ami                         = "ami-072bfb8ae2c884cc4"
   instance_type               = "t2.micro"
   subnet_id                   = var.public_subnet_ids[0]
-  vpc_security_group_ids      = [aws_security_group.app_server.id]
+  vpc_security_group_ids      = [aws_security_group.app.id]
   associate_public_ip_address = true
 
-  tags = { Name = "${var.prefix}-app-server" }
+  tags = { Name = "${var.prefix}-app" }
 }
 
-resource "aws_eip" "app_server" {
-  instance = aws_instance.app_server.id
+resource "aws_eip" "app" {
+  instance = aws_instance.app.id
   vpc      = true
-  tags     = { Name = "${var.prefix}-app_server" }
+  tags     = { Name = "${var.prefix}-app" }
 }
 
 
-resource "aws_security_group" "app_server" {
-  name        = "${var.prefix}-app_server"
-  description = "Allow SSH Port"
+resource "aws_security_group" "app" {
+  name        = "${var.prefix}-app-sg"
+  description = "Security Group for Elasticahe EC2"
   vpc_id      = var.vpc_id
 
   egress {
