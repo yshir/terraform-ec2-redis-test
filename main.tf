@@ -20,11 +20,13 @@ provider "aws" {
   region = "ap-northeast-1"
 }
 
-resource "aws_instance" "app_server" {
-  ami           = "ami-072bfb8ae2c884cc4"
-  instance_type = "t2.micro"
+locals {
+  tfvars = jsondecode(file("env/${terraform.workspace}.tfvars.json"))
 
-  tags = {
-    Name = "${terraform.workspace}-terraform-ec2-redis-test"
-  }
+  prefix = "${terraform.workspace}-terraform-ec2-redis-test"
+}
+
+module "ec2" {
+  source = "./ec2"
+  prefix = local.prefix
 }
