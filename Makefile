@@ -17,3 +17,4 @@ show:
 .PHONY: init
 init:
 	./bin/init.sh
+	./bin/terraform.sh init

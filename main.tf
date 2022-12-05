@@ -23,10 +23,20 @@ provider "aws" {
 locals {
   tfvars = jsondecode(file("env/${terraform.workspace}.tfvars.json"))
 
-  prefix = "${terraform.workspace}-terraform-ec2-redis-test"
+  prefix   = "${terraform.workspace}-${var.app_name}"
+  vpc_name = var.app_name
 }
 
+module "network" {
+  source   = "./network"
+  prefix   = local.prefix
+  vpc_name = local.vpc_name
+}
+
+
 module "ec2" {
-  source = "./ec2"
-  prefix = local.prefix
+  source            = "./ec2"
+  prefix            = local.prefix
+  vpc_id            = module.network.vpc_id
+  public_subnet_ids = module.network.public_subnet_ids
 }
