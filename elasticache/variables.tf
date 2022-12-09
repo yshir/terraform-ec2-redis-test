@@ -13,3 +13,7 @@ variable "node_count" {
 variable "private_subnet_ids" {
   type = list(string)
 }
+
+variable "public_cidr_blocks" {
+  type = list(string)
+}

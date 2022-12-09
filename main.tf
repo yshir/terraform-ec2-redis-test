@@ -21,7 +21,7 @@ provider "aws" {
 }
 
 locals {
-  tfvars = jsondecode(file("env/${terraform.workspace}.tfvars.json"))
+  tfvars = jsondecode(file("secrets/${terraform.workspace}.tfvars.json"))
 
   prefix   = "${terraform.workspace}-${var.app_name}"
   vpc_name = var.app_name
@@ -39,6 +39,7 @@ module "ec2" {
   prefix            = local.prefix
   vpc_id            = module.network.vpc_id
   public_subnet_ids = module.network.public_subnet_ids
+  public_key_path   = "secrets/${local.tfvars.ssh_key}"
 }
 
 module "elasticache" {
@@ -46,5 +47,6 @@ module "elasticache" {
   prefix             = local.prefix
   vpc_id             = module.network.vpc_id
   private_subnet_ids = module.network.private_subnet_ids
+  public_cidr_blocks = module.network.public_cidr_blocks
   node_count         = 1
 }

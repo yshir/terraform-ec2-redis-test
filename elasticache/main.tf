@@ -6,6 +6,10 @@ resource "aws_elasticache_replication_group" "redis" {
   replication_group_id = var.prefix
   description          = "Redis for ${var.prefix}"
 
+  # encryption
+  at_rest_encryption_enabled = true
+  transit_encryption_enabled = true
+
   num_cache_clusters         = var.node_count
   automatic_failover_enabled = var.node_count == 1 ? false : true
 
@@ -33,11 +37,14 @@ resource "aws_security_group" "redis" {
     protocol    = "-1"
     cidr_blocks = ["0.0.0.0/0"]
   }
+}
 
-  ingress {
-    from_port   = 6379
-    to_port     = 6379
-    protocol    = "tcp"
-    cidr_blocks = ["0.0.0.0/0"]
-  }
+resource "aws_security_group_rule" "redis" {
+  security_group_id = aws_security_group.redis.id
+
+  type        = "ingress"
+  from_port   = 6379
+  to_port     = 6379
+  protocol    = "tcp"
+  cidr_blocks = var.public_cidr_blocks
 }

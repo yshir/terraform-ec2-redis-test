@@ -4,6 +4,7 @@ resource "aws_instance" "app" {
   subnet_id                   = var.public_subnet_ids[0]
   vpc_security_group_ids      = [aws_security_group.app.id]
   associate_public_ip_address = true
+  key_name                    = "id_${replace(var.prefix, "-", "_")}"
 
   tags = { Name = "${var.prefix}-app" }
 }
@@ -33,4 +34,9 @@ resource "aws_security_group" "app" {
     protocol    = "tcp"
     cidr_blocks = ["0.0.0.0/0"]
   }
+}
+
+resource "aws_key_pair" "app" {
+  key_name = "id_${replace(var.prefix, "-", "_")}"
+  public_key = file(var.public_key_path)
 }
